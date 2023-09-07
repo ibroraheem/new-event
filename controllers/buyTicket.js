@@ -101,7 +101,7 @@ const webhook = async (req, res) => {
     try {
         const webhookData = req.body;
 
-        console.log("Received webhook data:", webhookData.event);
+        console.log("Received webhook data:", webhookData);
 
         if (webhookData.eventType === "SUCCESSFUL_TRANSACTION") {
             // Retrieve the expected payment details from the database using the payment reference
