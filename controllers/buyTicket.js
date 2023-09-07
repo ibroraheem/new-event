@@ -123,7 +123,8 @@ const webhook = async (req, res) => {
 
             // Execute the purchase logic
             await buyTicket(payment);
-
+            payment.status = 'paid'
+            await payment.save()
             // Send a 200 status back to Monnify
             res.status(200).send("Purchase successful");
         } else {

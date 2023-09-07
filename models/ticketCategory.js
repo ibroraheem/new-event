@@ -34,7 +34,10 @@ const PurchaseSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    category:{
+        type: String,
+        required: true,
+    },
     quantity: {
         type: Number,
         required: true,
