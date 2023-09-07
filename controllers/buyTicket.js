@@ -123,7 +123,7 @@ const webhook = async (req, res) => {
             }
 
             // Execute the purchase logic
-            await buyTicket(payment);
+            const bookingId = await buyTicket(payment);
             payment.status = 'completed'
             await payment.save()
 
@@ -141,7 +141,7 @@ const webhook = async (req, res) => {
                 html: ` <h2>Dear ${payment.buyerName},</h2>
                 <p>Your purchase of Ticket for our event is successful </p>
                 <p>Ticket Details:</p>
-                <p>BookingID: ${payment.bookingId}</p>
+                <p>BookingID: ${bookingId}</p>
                 <p>Number of Tickets: ${payment.quantity}</p>
                 `
             }
@@ -197,6 +197,7 @@ const buyTicket = async (payment) => {
         await newPurchase.save();
         ticket.availableTickets -= quantity;
         await ticket.save();
+        return bookingId;
     } catch (error) {
         console.error("Error buying ticket:", error);
         throw error;  // re-throw the error so the calling function knows something went wrong
