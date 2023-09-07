@@ -192,7 +192,8 @@ const buyTicket = async (payment) => {
         });
 
         await newPurchase.save();
-        payId.bookingId = bookingId
+        payId.bookingId = bookingId;
+        console.log(payId.bookingId)
         await payId.save();
         ticket.availableTickets -= quantity;
         await ticket.save();
