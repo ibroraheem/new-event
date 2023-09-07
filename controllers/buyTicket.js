@@ -126,7 +126,7 @@ const webhook = async (req, res) => {
             await buyTicket(payment);
             payment.status = 'completed'
             await payment.save()
-            
+
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -141,10 +141,19 @@ const webhook = async (req, res) => {
                 html: ` <h2>Dear ${payment.buyerName},</h2>
                 <p>Your purchase of Ticket for our event is successful </p>
                 <p>Ticket Details:</p>
-                <p>BookingID: ${payment.bookingId}
+                <p>BookingID: ${payment.bookingId}</p>
+                <p>Number of Tickets: ${payment.quantity}</p>
                 `
             }
-            res.status(200).send("Purchase successful");
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                    res.status(500).json({ message: error.message });
+                } else {
+                    console.log("Email sent: " + info.response);
+                    res.status(200).send("Purchase successful");
+                }
+            });
         } else {
             console.warn("Payment was not successful. Not proceeding with purchase.");
             res.status(200).send("Payment not successful");
@@ -161,7 +170,7 @@ const buyTicket = async (payment) => {
     try {
         const { quantity, buyerName, email, phone, reference, ticketId } = payment;
         const ticket = await Category.findById(ticketId);
-        const payId = await Payment.findOne({reference: reference})
+        const payId = await Payment.findOne({ reference: reference })
         if (!ticket) {
             throw new Error("Invalid ticket category");
         }
