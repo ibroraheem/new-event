@@ -138,12 +138,12 @@ const webhook = async (req, res) => {
 
 
 
-const buyTicket = async (userPaymentDetails) => {
+const buyTicket = async (payment) => {
     try {
-        const { quantity, buyerName, email, phone, reference, ticketId } = userPaymentDetails;
+        const { quantity, buyerName, email, phone, reference, ticketId } = payment;
 
         // Assuming the ticket's ID is stored in the payment details
-        const ticket = await Category.findOne({_id: ticket.id})
+        const ticket = await Category.findOne({_id: ticketId})
         if (!ticket) {
             throw new Error("Invalid ticket category");
         }
