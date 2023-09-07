@@ -23,7 +23,7 @@ const initiatePaymentWithMonnify = async (amount, email) => {
         customerEmail: email,
         paymentReference: generatePaymentReference(),
         contractCode: CONTRACT_CODE,
-        redirectUrl: 'http://localhost:3000/',
+        redirectUrl: 'https://sandbox.sdk.monnify.com/checkout/MNFY|96|20230907062109|000072',
         paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
         currencyCode: "NGN",
     };
