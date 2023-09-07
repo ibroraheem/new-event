@@ -42,7 +42,7 @@ const pay = async (req, res) => {
     try {
         const { quantity, buyerName, email, phone } = req.body;
         if (!quantity || !buyerName || !email) throw new Error('Please provide all the required fields');
-        const ticket = await Category.findById(req.params.id);
+        const ticket = await Category.findOne({_id: req.params.id});
         if (!ticket) return res.status(404).json({ message: "Invalid Category" })
         const amount = ticket.price * quantity;
         const Response = await initiatePaymentWithMonnify(amount, email);
