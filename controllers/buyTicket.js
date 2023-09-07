@@ -181,6 +181,9 @@ const buyTicket = async (payment) => {
 
         const bookingId = Math.floor(Math.random() * 9000000) + 1000000;
 
+        payId.bookingId = bookingId;
+        console.log(payId.bookingId)
+        await payId.save();
         const newPurchase = new Purchase({
             category: ticket.name,
             quantity,
@@ -192,9 +195,6 @@ const buyTicket = async (payment) => {
         });
 
         await newPurchase.save();
-        payId.bookingId = bookingId;
-        console.log(payId.bookingId)
-        await payId.save();
         ticket.availableTickets -= quantity;
         await ticket.save();
     } catch (error) {
