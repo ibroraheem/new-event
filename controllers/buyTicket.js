@@ -53,6 +53,7 @@ const pay = async (req, res) => {
             reference: paymentReference,
             buyerName: buyerName,
             email: email,
+            ticket: req.params.id,
             quantity: quantity,
             amount: amount,
             phone: phone,
@@ -141,7 +142,7 @@ const buyTicket = async (paymentDetails) => {
         const { quantity, buyerName, email, phone, reference } = paymentDetails;
 
         // Assuming the ticket's ID is stored in the payment details
-        const ticket = await Category.findById(paymentDetails.ticketId);
+        const ticket = await Category.findById();
 
         if (!ticket) {
             throw new Error("Invalid ticket category");

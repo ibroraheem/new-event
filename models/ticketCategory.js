@@ -68,7 +68,7 @@ const PaymentReference = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    quantity:{
+    quantity: {
         type: Number,
         required: true
     },
@@ -82,7 +82,11 @@ const PaymentReference = new mongoose.Schema({
         type: String,
         required: true,
     },
-    phone:{
+    phone: {
+        type: String,
+        required: true,
+    },
+    ticket: {
         type: String,
         required: true,
     }
