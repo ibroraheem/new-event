@@ -42,7 +42,7 @@ const pay = async (req, res) => {
     try {
         const { quantity, buyerName, email, phone } = req.body;
         if (!quantity || !buyerName || !email) throw new Error('Please provide all the required fields');
-        const ticket = await Category.findOne({ id: req.params.id })
+        const ticket = await Category.findById(req.params.id);
         if (!ticket) return res.status(404).json({ message: "Invalid Category" })
         const amount = ticket.price * quantity;
         const Response = await initiatePaymentWithMonnify(amount, email);
@@ -53,7 +53,7 @@ const pay = async (req, res) => {
             reference: paymentReference,
             buyerName: buyerName,
             email: email,
-            ticket: ticket.id,
+            ticket: ticket._id,
             quantity: quantity,
             amount: amount,
             phone: phone,
@@ -141,9 +141,7 @@ const webhook = async (req, res) => {
 const buyTicket = async (payment) => {
     try {
         const { quantity, buyerName, email, phone, reference, ticketId } = payment;
-
-        // Assuming the ticket's ID is stored in the payment details
-        const ticket = await Category.findOne({_id: ticketId})
+        const ticket = await Category.findById(ticketId);
         if (!ticket) {
             throw new Error("Invalid ticket category");
         }
