@@ -53,7 +53,7 @@ const pay = async (req, res) => {
             reference: paymentReference,
             buyerName: buyerName,
             email: email,
-            ticket: req.params.id,
+            ticket: ticket.id,
             quantity: quantity,
             amount: amount,
             phone: phone,
