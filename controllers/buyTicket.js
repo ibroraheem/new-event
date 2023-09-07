@@ -114,7 +114,7 @@ const webhook = async (req, res) => {
             }
 
             // Check if the amount paid matches the expected amount
-            if (payment.amount !== webhookData.amount) {
+            if (payment.amount !== webhookData.eventData.amountPaid) {
                 console.error(`Amount mismatch: expected ${payment.amount}, got ${webhookData.amount}`);
                 return res.status(400).send("Amount mismatch");
             }
