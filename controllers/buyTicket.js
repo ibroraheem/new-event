@@ -1,4 +1,5 @@
 const axios = require('axios');
+const nodemailer = require('nodemailer')
 const { Category, Purchase, Payment } = require('../models/ticketCategory')
 
 const MONNIFY_BASE_URL = 'https://sandbox.monnify.com/';
@@ -42,7 +43,7 @@ const pay = async (req, res) => {
     try {
         const { quantity, buyerName, email, phone } = req.body;
         if (!quantity || !buyerName || !email) throw new Error('Please provide all the required fields');
-        const ticket = await Category.findOne({id: req.params.id});
+        const ticket = await Category.findOne({ id: req.params.id });
         if (!ticket) return res.status(404).json({ message: "Invalid Category" })
         const amount = ticket.price * quantity;
         const Response = await initiatePaymentWithMonnify(amount, email);
@@ -125,7 +126,24 @@ const webhook = async (req, res) => {
             await buyTicket(payment);
             payment.status = 'completed'
             await payment.save()
-            // Send a 200 status back to Monnify
+            
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASSWORD,
+                },
+            })
+            const mailOptions = {
+                from: process.env.EMAIL,
+                to: payment.email,
+                subject: "Purchase Successful",
+                html: ` <h2>Dear ${payment.buyerName},</h2>
+                <p>Your purchase of Ticket for our event is successful </p>
+                <p>Ticket Details:</p>
+                <p>BookingID: ${payment.bookingId}
+                `
+            }
             res.status(200).send("Purchase successful");
         } else {
             console.warn("Payment was not successful. Not proceeding with purchase.");
@@ -143,6 +161,7 @@ const buyTicket = async (payment) => {
     try {
         const { quantity, buyerName, email, phone, reference, ticketId } = payment;
         const ticket = await Category.findById(ticketId);
+        const payId = await Payment.findOne({reference: reference})
         if (!ticket) {
             throw new Error("Invalid ticket category");
         }
@@ -164,7 +183,8 @@ const buyTicket = async (payment) => {
         });
 
         await newPurchase.save();
-
+        payId.bookingId = bookingId
+        await payId.save();
         ticket.availableTickets -= quantity;
         await ticket.save();
     } catch (error) {

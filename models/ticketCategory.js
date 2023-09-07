@@ -34,7 +34,7 @@ const PurchaseSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    category:{
+    category: {
         type: String,
         required: true,
     },
@@ -88,7 +88,10 @@ const PaymentReference = new mongoose.Schema({
     ticketId: {
         type: String,
         required: true,
-    }
+    },
+    bookingId: {
+        type: String,
+    },
 }, { timestamps: true })
 
 const Payment = mongoose.model('Payment', PaymentReference)
