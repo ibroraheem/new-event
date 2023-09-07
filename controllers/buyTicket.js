@@ -60,7 +60,7 @@ const pay = async (req, res) => {
             phone: phone,
         });
         await newPayment.save();
-        res.status(200).send(checkoutUrl)
+        res.status(200).send({checkoutUrl: checkoutUrl})
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
