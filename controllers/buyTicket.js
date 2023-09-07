@@ -101,9 +101,9 @@ const webhook = async (req, res) => {
     try {
         const webhookData = req.body;
 
-        console.log("Received webhook data:", webhookData.eventData);
+        console.log("Received webhook data:", webhookData.event);
 
-        if (webhookData.eventData.eventType === "SUCCESSFUL_TRANSACTION") {
+        if (webhookData.eventType === "SUCCESSFUL_TRANSACTION") {
             // Retrieve the expected payment details from the database using the payment reference
             const payment = await Payment.findOne({ reference: webhookData.eventData.paymentReference });
 
