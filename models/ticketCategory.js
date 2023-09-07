@@ -86,7 +86,7 @@ const PaymentReference = new mongoose.Schema({
         type: String,
         required: true,
     },
-    ticket: {
+    ticketId: {
         type: String,
         required: true,
     }

@@ -88,7 +88,7 @@ async function handleWebhook(webhookData) {
             email: payment.email,
             phone: payment.phone,
             paymentReference: payment.reference,
-            ticket: ticket.id
+            ticketId: ticket.id
         };
         await buyTicket({ body: userPaymentDetails });
 
@@ -138,12 +138,12 @@ const webhook = async (req, res) => {
 
 
 
-const buyTicket = async (paymentDetails) => {
+const buyTicket = async (userPaymentDetails) => {
     try {
-        const { quantity, buyerName, email, phone, reference } = paymentDetails;
+        const { quantity, buyerName, email, phone, reference, ticketId } = userPaymentDetails;
 
         // Assuming the ticket's ID is stored in the payment details
-        const ticket = await Category.findById(req.params.id);
+        const ticket = await Category.findById(ticketId);
 
         if (!ticket) {
             throw new Error("Invalid ticket category");
