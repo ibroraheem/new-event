@@ -101,18 +101,15 @@ const webhook = async (req, res) => {
     try {
         const webhookData = req.body;
 
-        // Save the webhook data for debugging (you can remove this later)
-        console.log("Received webhook data:", webhookData);
+        console.log("Received webhook data:", webhookData.eventData);
 
-        // Assuming Monnify sends a 'status' and 'amount' in the webhook data
-        // Adjust field names based on the actual structure of the webhook data
-        if (webhookData.status === "SUCCESSFUL") {
+        if (webhookData.eventData.eventType === "SUCCESSFUL_TRANSACTION") {
             // Retrieve the expected payment details from the database using the payment reference
-            const payment = await Payment.findOne({ reference: webhookData.paymentReference });
+            const payment = await Payment.findOne({ reference: webhookData.eventData.paymentReference });
 
             // Validate the payment
             if (!payment) {
-                console.error(`Payment with reference ${webhookData.paymentReference} not found`);
+                console.error(`Payment with reference ${webhookData.eventData.paymentReference} not found`);
                 return res.status(404).send("Payment not found");
             }
 
